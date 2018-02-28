@@ -1,0 +1,20 @@
+{% block title %}Artist {{ artist.name }}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('homepage') }}">Back home</a>
+
+    <h1>Artist {{ artist.name }}</h1>
+
+    <ul>
+        {% for albumArtist in artist.albumArtists %}
+            <li>
+                {{ albumArtist.album.title }} ({{ albumArtist.role.name }})
+                -- Fed received by album <b>{{ albumArtist.tariff }}</b>
+                | <a href="{{ path('edit_album_artist', {'id': albumArtist.id}) }}">Edit</a>
+                | <a href="{{ path('remove_album_artist', {'id': albumArtist.id}) }}">Delete</a>
+            </li>
+        {% else %}
+            <li>Not found albums</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

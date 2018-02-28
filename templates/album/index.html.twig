@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Album List{% endblock %}
+
+{% block body %}
+    <h1>Music Record Dashboard</h1>
+
+    <div>
+        <h2>Album list</h2>
+        <ul>
+            {% for album in albums %}
+                <li>
+                    {{ album.title }}
+                    [<a href="{{ path('show_album', { 'id': album.id }) }}">show album artist</a>]
+                    [<a href="{{ path('remove_album', { 'id': album.id }) }}">Delete</a>]
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('new_album') }}">Add new Album</a>
+    </div>
+
+    <div>
+        <h2>Artist company</h2>
+        <ul>
+            {% for artist in artists %}
+                <li>
+                    {{ artist.name }}
+                    [<a href="{{ path('show_artist', { 'id': artist.id }) }}">show fed received by album</a>]
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ path('new_artist') }}">Add new Artist</a>
+    </div>
+
+
+{% endblock %}

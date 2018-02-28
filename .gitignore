@@ -1,0 +1,23 @@
+
+###> IDE/(SublimeText, Eclipse, Zend Studio, Netbeans, PHPStorm, TextMate2) ###
+/.idea/
+Capfile
+.buildpath
+nbproject
+.project
+.settings
+.sublime-project
+.tm_properties
+TextMate2
+###< IDE/(SublimeText, Eclipse, Zend Studio, Netbeans, PHPStorm, TextMate2) ###
+
+###> symfony/framework-bundle ###
+.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/web-server-bundle ###
+.web-server-pid
+###< symfony/web-server-bundle ###

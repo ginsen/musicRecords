@@ -1,2 +1,2 @@
 # musicRecords
-Web demo with DDD strategic
+Proof web with approach DDD

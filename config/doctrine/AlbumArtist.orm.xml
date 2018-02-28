@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+
+  <entity repository-class="App\Repository\AlbumArtistRepository" name="App\Entity\AlbumArtist" table="album_artist">
+    <indexes>
+      <index name="main_idx" columns="album_id,artist_id,role_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="tariff" type="decimal" column="tariff" precision="0" scale="2" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="position" type="integer" column="position" precision="0" scale="0" nullable="false">
+      <gedmo:sortable-position/>
+    </field>
+    <many-to-one field="album" target-entity="App\Entity\Album" inversed-by="albumArtists" fetch="LAZY">
+      <gedmo:sortable-group/>
+      <join-columns>
+        <join-column name="album_id" referenced-column-name="id" nullable=""/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="artist" target-entity="App\Entity\Artist" inversed-by="albumArtists" fetch="LAZY">
+      <join-columns>
+        <join-column name="artist_id" referenced-column-name="id" nullable=""/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="role" target-entity="App\Entity\Role" inversed-by="albumArtists" fetch="LAZY">
+      <join-columns>
+        <join-column name="role_id" referenced-column-name="id" nullable=""/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Album List{% endblock %}
+
+{% block body %}
+    <a href="{{ path('homepage') }}">Back album list</a>
+
+    <h1>Album {{ album.title }} create at {{ album.createdAt.format('d/m/Y') }}</h1>
+    <h2>Artists</h2>
+    <ul>
+        {% for albumArtist in album.albumArtists %}
+            <li>
+                <a href="{{ path('album_artist_position', {'act': 'up', 'id': albumArtist.id}) }}">[up]</a>
+                <a href="{{ path('album_artist_position', {'act': 'down', 'id': albumArtist.id}) }}">[down]</a>
+                <a href="{{ path('album_artist_position', {'act': 'top', 'id': albumArtist.id}) }}">[top]</a>
+                <a href="{{ path('album_artist_position', {'act': 'bottom', 'id': albumArtist.id}) }}">[bottom]</a>
+                {{ albumArtist.artist.name }} ({{ albumArtist.role.name }})
+                -- Fed received by album <b>{{ albumArtist.tariff }}</b>
+                | <a href="{{ path('edit_album_artist', {'id': albumArtist.id}) }}">Edit</a>
+                | <a href="{{ path('remove_album_artist', {'id': albumArtist.id}) }}">Delete</a>
+            </li>
+        {% else %}
+            <li>Not found artist</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('new_album_artist', {'album_id': album.id }) }}">Add artist to album</a>
+{% endblock %}
