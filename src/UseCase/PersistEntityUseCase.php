@@ -8,7 +8,7 @@
 
 namespace App\UseCase;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\IPersistLayer;
 
 /**
  * Class PersistEntityUseCase
@@ -16,26 +16,31 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class PersistEntityUseCase
 {
-    /** @var EntityManagerInterface */
-    protected $em;
+    /** @var IPersistLayer */
+    protected $persistLayer;
+
+    /** @var object */
+    protected $entity;
 
 
     /**
-     * NewAlbumUseCase constructor.
-     * @param EntityManagerInterface $entityManager
+     * PersistEntityUseCase constructor.
+     *
+     * @param IPersistLayer $persistLayer
+     * @param object        $entity
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(IPersistLayer $persistLayer, object $entity)
     {
-        $this->em = $entityManager;
+        $this->persistLayer = $persistLayer;
+        $this->entity       = $entity;
     }
 
 
     /**
-     * @param object $entity
+     * Persist entity object
      */
-    public function execute(object $entity): void
+    public function execute(): void
     {
-        $this->em->persist($entity);
-        $this->em->flush();
+        $this->persistLayer->save($this->entity);
     }
 }

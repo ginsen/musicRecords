@@ -7,9 +7,9 @@
  */
 
 namespace App\UseCase;
-use App\Entity\IAlbum;
-use App\Repository\IAlbumArtistRepository;
-use Doctrine\ORM\EntityManagerInterface;
+
+use App\Entity\IAlbumArtist;
+use App\Service\IPersistLayer;
 
 /**
  * Class ChangePositionListUseCase
@@ -17,33 +17,75 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ChangePositionListUseCase
 {
-    /** @var IAlbumArtistRepository */
-    protected $albumArtistRepo;
+    /** @var IAlbumArtist */
+    protected $albumArtist;
 
-    /** @var EntityManagerInterface */
-    protected $em;
+    /** @var IPersistLayer */
+    protected $persistLayer;
+
+    /** @var string */
+    protected $action;
 
 
     /**
      * ChangePositionListUseCase constructor.
-     * @param IAlbumArtistRepository $albumArtistRepo
-     * @param EntityManagerInterface $entityManager
+     *
+     * @param IAlbumArtist  $albumArtist
+     * @param IPersistLayer $persistLayer
+     * @param string        $action
      */
-    public function __construct(
-        IAlbumArtistRepository $albumArtistRepo,
-        EntityManagerInterface $entityManager
-    ) {
-        $this->albumArtistRepo = $albumArtistRepo;
-        $this->em = $entityManager;
-
+    public function __construct(IAlbumArtist $albumArtist, IPersistLayer $persistLayer, string $action)
+    {
+        $this->albumArtist  = $albumArtist;
+        $this->persistLayer = $persistLayer;
+        $this->action       = $action;
     }
 
 
     /**
-     * @return IAlbum
+     * @return IAlbumArtist
      */
-    public function execute(): IAlbum
+    public function execute(): IAlbumArtist
     {
-        $this->albumArtistRepo->findAlbumArtist($album_artist_id);
+        $position = $this->albumArtist->getPosition();
+        $newPosition = $this->getNewPosition($position);
+
+        if ($newPosition !== $position) {
+            $this->albumArtist->setPosition($newPosition);
+            $this->persistLayer->save($this->albumArtist);
+        }
+
+        return $this->albumArtist;
+    }
+
+
+    /**
+     * @param int $position
+     * @return int
+     */
+    protected function getNewPosition(int $position): int
+    {
+        switch ($this->action) {
+            case 'top':
+                $position = 0;
+                break;
+
+            case 'up':
+                if($position > 0) {
+                    --$position;
+                }
+                break;
+
+            case 'down':
+                ++$position;
+                break;
+
+            case 'bottom':
+                $position = -1;
+                break;
+
+        }
+
+        return $position;
     }
 }

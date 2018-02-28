@@ -8,6 +8,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Album;
+use App\Entity\AlbumArtist;
+use App\Form\AlbumArtistType;
+use App\UseCase\ChangePositionListUseCase;
+use App\UseCase\PersistEntityUseCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,24 +30,18 @@ class AlbumArtistController extends Controller
      *     "act" = "up|down|top|bottom",
      *     "id" = "\d+"
      * })
+     * @Method("GET")
+     * @param AlbumArtist $albumArtist
      * @param Request $request
      * @return Response
      */
-    public function setPosition(Request $request) :Response
+    public function setPosition(AlbumArtist $albumArtist, Request $request) :Response
     {
-        $albumArtistId = $request->get('id');
-        $action        = $request->get('act');
+        $persistLayer = $this->get('app.doctrine.persist.layer');
+        $action       = $request->get('act');
 
-        $albumManager = $this->get('app.manager.album');
-        $albumArtist = $albumManager->getAlbumArtist($albumArtistId);
-        $position = $albumArtist->getPosition();
-
-        $newPosition = $albumManager->getNewPosition($action, $position);
-
-        if ($newPosition !== $position) {
-            $albumArtist->setPosition($newPosition);
-            $albumManager->saveEntity($albumArtist);
-        }
+        $albumArtist = (new ChangePositionListUseCase($albumArtist, $persistLayer, $action))
+            ->execute();
 
         return $this->redirectToRoute('show_album', [
             'id' => $albumArtist->getAlbum()->getId()
@@ -54,22 +53,22 @@ class AlbumArtistController extends Controller
      * @Route("/album-artist/edit/{id}", name="edit_album_artist", requirements={
      *     "id" = "\d+"
      * })
+     * @Method("GET")
+     * @param AlbumArtist $albumArtist
      * @param Request $request
      * @return Response
      */
-    public function edit(Request $request): Response
+    public function edit(AlbumArtist $albumArtist, Request $request): Response
     {
-        $albumArtistId = $request->get('id');
-
-        $albumManager = $this->get('app.manager.album');
-        $albumArtist = $albumManager->getAlbumArtist($albumArtistId);
-
         $form = $this->createForm(AlbumArtistType::class, $albumArtist);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $albumArtist = $form->getData();
-            $albumManager->saveEntity($albumArtist);
+
+            $persistLayer = $this->get('app.doctrine.persist.layer');
+            (new PersistEntityUseCase($persistLayer, $albumArtist))
+                ->execute();
 
             return $this->redirectToRoute('show_album', [
                 'id' => $albumArtist->getAlbum()->getId()
@@ -90,12 +89,8 @@ class AlbumArtistController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function newAlbumArtist(Request $request)
+    public function newAlbumArtist(Album $album, Request $request)
     {
-        $albumId = $request->get('album_id');
-
-        $albumManager = $this->get('app.manager.album');
-        $album  = $albumManager->getAlbum($albumId);
         $role   = $albumManager->getOneRole();
         $artist = $albumManager->getOneArtist();
 

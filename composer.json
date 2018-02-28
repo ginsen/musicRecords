@@ -1,4 +1,5 @@
 {
+    "name": "ginsen/music-records",
     "type": "project",
     "license": "proprietary",
     "require": {

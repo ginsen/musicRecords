@@ -10,6 +10,8 @@ namespace App\Controller;
 
 use App\Entity\Album;
 use App\Form\AlbumType;
+use App\UseCase\HomeUseCase;
+use App\UseCase\PersistEntityUseCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +30,10 @@ class AlbumController extends Controller
      */
     public function home(): Response
     {
-        [$albums, $artists] = $this->get('app.home.use-case')->execute();
+        $albumRepo  = $this->get('App\Repository\AlbumRepository');
+        $artistRepo = $this->get('App\Repository\ArtistRepository');
+
+        [$albums, $artists] = (new HomeUseCase($albumRepo, $artistRepo))->execute();
 
         return $this->render('album/index.html.twig', [
             'albums' => $albums,
@@ -66,7 +71,10 @@ class AlbumController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $album = $form->getData();
-            $this->get('app.persist-entity.use-case')->execute($album);
+
+            $persistLayer = $this->get('app.doctrine.persist.layer');
+            (new PersistEntityUseCase($persistLayer, $album))
+                ->execute();
 
             return $this->redirectToRoute('show_album', [
                 'id' => $album->getId()

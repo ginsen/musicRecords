@@ -27,13 +27,18 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    app.home.use-case:
+    App\Repository\AlbumRepository:
         public: true
-        class: App\UseCase\HomeUseCase
-        arguments:
-            - '@App\Repository\AlbumRepository'
-            - '@App\Repository\ArtistRepository'
 
-    app.persist-entity.use-case:
+    App\Repository\ArtistRepository:
         public: true
-        class: App\UseCase\PersistEntityUseCase
+
+    App\Repository\RoleRepository:
+        public: true
+
+    App\Repository\AlbumArtistRepository:
+        public: true
+
+    app.doctrine.persist.layer:
+        class: App\Service\DoctrinePersistLayer
+        public: true
