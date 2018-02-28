@@ -11,7 +11,7 @@ namespace App\Controller;
 use App\Entity\Album;
 use App\Form\AlbumType;
 use App\UseCase\HomeUseCase;
-use App\UseCase\PersistEntityUseCase;
+use App\UseCase\SaveEntityUseCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +73,7 @@ class AlbumController extends Controller
             $album = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new PersistEntityUseCase($persistLayer, $album))
+            (new SaveEntityUseCase($persistLayer, $album))
                 ->execute();
 
             return $this->redirectToRoute('show_album', [

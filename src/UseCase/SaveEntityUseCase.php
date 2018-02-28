@@ -11,10 +11,10 @@ namespace App\UseCase;
 use App\Service\IPersistLayer;
 
 /**
- * Class PersistEntityUseCase
+ * Class SaveEntityUseCase
  * @package App\UseCase
  */
-class PersistEntityUseCase
+class SaveEntityUseCase
 {
     /** @var IPersistLayer */
     protected $persistLayer;
@@ -24,10 +24,10 @@ class PersistEntityUseCase
 
 
     /**
-     * PersistEntityUseCase constructor.
+     * SaveEntityUseCase constructor.
      *
      * @param IPersistLayer $persistLayer
-     * @param object        $entity
+     * @param object $entity
      */
     public function __construct(IPersistLayer $persistLayer, object $entity)
     {
@@ -37,7 +37,7 @@ class PersistEntityUseCase
 
 
     /**
-     * Persist entity object
+     * Save entity object
      */
     public function execute(): void
     {

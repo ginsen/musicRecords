@@ -10,7 +10,7 @@ namespace App\Controller;
 
 use App\Entity\Artist;
 use App\Form\ArtistType;
-use App\UseCase\PersistEntityUseCase;
+use App\UseCase\SaveEntityUseCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +51,7 @@ class ArtistController extends Controller
             $artist = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new PersistEntityUseCase($persistLayer, $artist))
+            (new SaveEntityUseCase($persistLayer, $artist))
                 ->execute();
 
             return $this->redirectToRoute('homepage');
