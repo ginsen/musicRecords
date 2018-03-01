@@ -19,28 +19,25 @@ class SaveEntityUseCase
     /** @var IPersistLayer */
     protected $persistLayer;
 
-    /** @var object */
-    protected $entity;
-
 
     /**
      * SaveEntityUseCase constructor.
      *
      * @param IPersistLayer $persistLayer
-     * @param object $entity
      */
-    public function __construct(IPersistLayer $persistLayer, object $entity)
+    public function __construct(IPersistLayer $persistLayer)
     {
         $this->persistLayer = $persistLayer;
-        $this->entity       = $entity;
     }
 
 
     /**
-     * Save entity object
+     * Persist entity.
+     *
+     * @param object $entity
      */
-    public function execute(): void
+    public function execute($entity): void
     {
-        $this->persistLayer->save($this->entity);
+        $this->persistLayer->save($entity);
     }
 }

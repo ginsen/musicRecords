@@ -26,34 +26,30 @@ class NewAlbumArtist
     /** @var IRoleRepository */
     protected $roleRepo;
 
-    /** @var IAlbum */
-    protected $album;
-
 
     /**
      * NewAlbumArtist constructor.
      *
      * @param IArtistRepository $artistRepo
      * @param IRoleRepository   $roleRepo
-     * @param IAlbum            $album
      */
-    public function __construct(IArtistRepository $artistRepo, IRoleRepository $roleRepo, IAlbum $album)
+    public function __construct(IArtistRepository $artistRepo, IRoleRepository $roleRepo)
     {
         $this->artistRepo = $artistRepo;
         $this->roleRepo   = $roleRepo;
-        $this->album      = $album;
     }
 
 
     /**
+     * @param IAlbum $album
      * @return IAlbumArtist
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function execute(): IAlbumArtist
+    public function execute(IAlbum $album): IAlbumArtist
     {
         $artist = $this->artistRepo->findOneArtist();
         $role   = $this->roleRepo->findOneRole();
 
-        return new AlbumArtist($artist, $role, $this->album);
+        return new AlbumArtist($artist, $role, $album);
     }
 }

@@ -27,7 +27,7 @@ class RoleRepository extends ServiceEntityRepository implements IRoleRepository
      */
     public function findOneRole(): ?IRole
     {
-        $dql = 'SELECT r FROM AppBundle:Role r';
+        $dql = 'SELECT r FROM App:Role r';
 
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setMaxResults(1);

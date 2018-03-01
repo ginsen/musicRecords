@@ -26,7 +26,7 @@ class ArtistRepository extends ServiceEntityRepository implements IArtistReposit
      */
     public function findOneArtist(): ?IArtist
     {
-        $dql = 'SELECT a FROM AppBundle:Artist a';
+        $dql = 'SELECT a FROM App:Artist a';
 
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setMaxResults(1);
@@ -41,8 +41,8 @@ class ArtistRepository extends ServiceEntityRepository implements IArtistReposit
     public function findArtist(int $id): ?IArtist
     {
         $dql = 'SELECT ar
-                FROM AppBundle:Artist ar
-                LEFT JOIN AppBundle:AlbumArtist alar WITH ar.id = alar.artist
+                FROM App:Artist ar
+                LEFT JOIN App:AlbumArtist alar WITH ar.id = alar.artist
                 WHERE ar.id = :id';
 
         $query = $this->getEntityManager()->createQuery($dql);

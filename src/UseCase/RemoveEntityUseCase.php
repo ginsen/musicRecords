@@ -19,28 +19,25 @@ class RemoveEntityUseCase
     /** @var IPersistLayer */
     protected $persistLayer;
 
-    /** @var object */
-    protected $entity;
-
 
     /**
      * RemoveEntityUseCase constructor.
      *
      * @param IPersistLayer $persistLayer
-     * @param object        $entity
      */
-    public function __construct(IPersistLayer $persistLayer, object $entity)
+    public function __construct(IPersistLayer $persistLayer)
     {
         $this->persistLayer = $persistLayer;
-        $this->entity       = $entity;
     }
 
 
     /**
-     * Remove entity object
+     * Remove entity object.
+     *
+     * @param object $entity
      */
-    public function execute(): void
+    public function execute($entity): void
     {
-        $this->persistLayer->remove($this->entity);
+        $this->persistLayer->remove($entity);
     }
 }

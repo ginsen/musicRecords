@@ -15,7 +15,7 @@ use App\UseCase\ChangePositionListUseCase;
 use App\UseCase\NewAlbumArtist;
 use App\UseCase\RemoveEntityUseCase;
 use App\UseCase\SaveEntityUseCase;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +32,7 @@ class AlbumArtistController extends Controller
      *     "act" = "up|down|top|bottom",
      *     "id" = "\d+"
      * })
-     * @Method("GET")
+     * @ParamConverter("albumArtist", class="App:AlbumArtist", options={ "repository_method" = "findAlbumArtist" })
      * @param AlbumArtist $albumArtist
      * @param Request $request
      * @return Response
@@ -42,20 +42,18 @@ class AlbumArtistController extends Controller
         $persistLayer = $this->get('app.doctrine.persist.layer');
         $action       = $request->get('act');
 
-        $albumArtist = (new ChangePositionListUseCase($albumArtist, $persistLayer, $action))
-            ->execute();
+        $albumArtist = (new ChangePositionListUseCase($persistLayer))
+            ->execute($albumArtist, $action);
 
-        return $this->redirectToRoute('show_album', [
+        return $this->redirectToRoute('album_show', [
             'id' => $albumArtist->getAlbum()->getId()
         ]);
     }
 
 
     /**
-     * @Route("/album-artist/edit/{id}", name="edit_album_artist", requirements={
-     *     "id" = "\d+"
-     * })
-     * @Method("GET")
+     * @Route("/album-artist/edit/{id}", name="album_artist_edit", requirements={ "id" = "\d+" })
+     * @ParamConverter("albumArtist", class="App:AlbumArtist", options={ "repository_method" = "findAlbumArtist" })
      * @param AlbumArtist $albumArtist
      * @param Request $request
      * @return Response
@@ -69,10 +67,10 @@ class AlbumArtistController extends Controller
             $albumArtist = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new SaveEntityUseCase($persistLayer, $albumArtist))
-                ->execute();
+            (new SaveEntityUseCase($persistLayer))
+                ->execute($albumArtist);
 
-            return $this->redirectToRoute('show_album', [
+            return $this->redirectToRoute('album_show', [
                 'id' => $albumArtist->getAlbum()->getId()
             ]);
         }
@@ -85,10 +83,8 @@ class AlbumArtistController extends Controller
 
 
     /**
-     * @Route("/album-artist/new/{album_id}", name="new_album_artist", requirements={
-     *     "album_id" = "\d+"
-     * })
-     * @Method("GET")
+     * @Route("/album-artist/new/{id}", name="album_artist_new", requirements={ "id" = "\d+" })
+     * @ParamConverter("album", options={"repository_method" = "findAlbum"})
      * @param Album $album
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
@@ -99,7 +95,7 @@ class AlbumArtistController extends Controller
         $artistRepo = $this->get('App\Repository\ArtistRepository');
         $roleRepo   = $this->get('App\Repository\RoleRepository');
 
-        $albumArtist = (new NewAlbumArtist($artistRepo, $roleRepo, $album))->execute();
+        $albumArtist = (new NewAlbumArtist($artistRepo, $roleRepo))->execute($album);
 
         $form = $this->createForm(AlbumArtistType::class, $albumArtist);
 
@@ -108,10 +104,10 @@ class AlbumArtistController extends Controller
             $albumArtist = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new SaveEntityUseCase($persistLayer, $albumArtist))
-                ->execute();
+            (new SaveEntityUseCase($persistLayer))
+                ->execute($albumArtist);
 
-            return $this->redirectToRoute('show_album', [
+            return $this->redirectToRoute('album_show', [
                 'id' => $albumArtist->getAlbum()->getId()
             ]);
         }
@@ -124,10 +120,9 @@ class AlbumArtistController extends Controller
 
 
     /**
-     * @Route("/album-artist/remove/{id}", name="remove_album_artist", requirements={
+     * @Route("/album-artist/remove/{id}", name="album_artist_remove", requirements={
      *     "id" = "\d+"
      * })
-     * @Method("GET")
      * @param AlbumArtist $albumArtist
      * @return Response
      */
@@ -136,10 +131,10 @@ class AlbumArtistController extends Controller
         $albumId = $albumArtist->getAlbum()->getId();
 
         $persistLayer = $this->get('app.doctrine.persist.layer');
-        (new RemoveEntityUseCase($persistLayer, $albumArtist))
-            ->execute();
+        (new RemoveEntityUseCase($persistLayer))
+            ->execute($albumArtist);
 
-        return $this->redirectToRoute('show_album', [
+        return $this->redirectToRoute('album_show', [
             'id' => $albumId
         ]);
     }

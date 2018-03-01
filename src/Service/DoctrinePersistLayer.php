@@ -34,7 +34,7 @@ class DoctrinePersistLayer implements IPersistLayer
     /**
      * @inheritdoc
      */
-    public function save(object $entity, bool $flush = true): void
+    public function save($entity, bool $flush = true): void
     {
         $this->em->persist($entity);
 
@@ -47,7 +47,7 @@ class DoctrinePersistLayer implements IPersistLayer
     /**
      * @inheritdoc
      */
-    public function remove(object $entity, bool $flush = true): void
+    public function remove($entity, bool $flush = true): void
     {
         $this->em->remove($entity);
 

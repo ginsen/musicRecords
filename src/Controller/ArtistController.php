@@ -11,7 +11,7 @@ namespace App\Controller;
 use App\Entity\Artist;
 use App\Form\ArtistType;
 use App\UseCase\SaveEntityUseCase;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArtistController extends Controller
 {
     /**
-     * @Route("/artist/{id}", name="show_artist")
-     * @Method("GET")
+     * @Route("/artist/{id}", name="artist_show", requirements={ "id" = "\d+" })
+     * @ParamConverter("artist", options={ "repository_method" = "findArtist" })
      * @param Artist $artist
      * @return Response
      */
@@ -38,7 +38,7 @@ class ArtistController extends Controller
 
 
     /**
-     * @Route("/artist/new", name="new_artist")
+     * @Route("/artist/new", name="artist_new")
      * @param Request $request
      * @return Response
      */
@@ -51,8 +51,8 @@ class ArtistController extends Controller
             $artist = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new SaveEntityUseCase($persistLayer, $artist))
-                ->execute();
+            (new SaveEntityUseCase($persistLayer))
+                ->execute($artist);
 
             return $this->redirectToRoute('homepage');
         }

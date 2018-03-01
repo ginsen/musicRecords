@@ -20,7 +20,7 @@ interface IPersistLayer
      * @param object $entity
      * @param bool|null $flush
      */
-    public function save(object $entity, bool $flush=true): void;
+    public function save($entity, bool $flush=true): void;
 
 
     /**
@@ -29,5 +29,5 @@ interface IPersistLayer
      * @param object $entity
      * @param bool|null $flush
      */
-    public function remove(object $entity, bool $flush=true): void;
+    public function remove($entity, bool $flush=true): void;
 }

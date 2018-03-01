@@ -11,8 +11,9 @@ namespace App\Controller;
 use App\Entity\Album;
 use App\Form\AlbumType;
 use App\UseCase\HomeUseCase;
+use App\UseCase\RemoveEntityUseCase;
 use App\UseCase\SaveEntityUseCase;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,10 +44,8 @@ class AlbumController extends Controller
 
 
     /**
-     * @Route("/album/{id}", name="show_album", requirements={
-     *     "id" = "\d+"
-     * })
-     * @Method("GET")
+     * @Route("/album/{id}", name="album_show", requirements={ "id" = "\d+" })
+     * @ParamConverter("album", class="App:Album", options={ "repository_method" = "findAlbum" })
      * @param Album $album
      * @return Response
      */
@@ -59,7 +58,7 @@ class AlbumController extends Controller
 
 
     /**
-     * @Route("/album/new", name="new_album")
+     * @Route("/album/new", name="album_new")
      * @param Request $request
      * @return Response
      */
@@ -73,10 +72,10 @@ class AlbumController extends Controller
             $album = $form->getData();
 
             $persistLayer = $this->get('app.doctrine.persist.layer');
-            (new SaveEntityUseCase($persistLayer, $album))
-                ->execute();
+            (new SaveEntityUseCase($persistLayer))
+                ->execute($album);
 
-            return $this->redirectToRoute('show_album', [
+            return $this->redirectToRoute('album_show', [
                 'id' => $album->getId()
             ]);
         }
@@ -84,5 +83,20 @@ class AlbumController extends Controller
         return $this->render('album/edit_album.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+
+    /**
+     * @Route("/album/remove/{id}", name="album_remove", requirements={ "id" = "\d+" })
+     * @param Album $album
+     * @return Response
+     */
+    public function removeAlbum(Album $album): Response
+    {
+        $persistLayer = $this->get('app.doctrine.persist.layer');
+        (new RemoveEntityUseCase($persistLayer))
+            ->execute($album);
+
+        return $this->redirectToRoute('homepage');
     }
 }

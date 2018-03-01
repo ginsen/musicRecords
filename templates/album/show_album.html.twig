@@ -16,13 +16,13 @@
                 <a href="{{ path('album_artist_position', {'act': 'bottom', 'id': albumArtist.id}) }}">[bottom]</a>
                 {{ albumArtist.artist.name }} ({{ albumArtist.role.name }})
                 -- Fed received by album <b>{{ albumArtist.tariff }}</b>
-                | <a href="{{ path('edit_album_artist', {'id': albumArtist.id}) }}">Edit</a>
-                | <a href="{{ path('remove_album_artist', {'id': albumArtist.id}) }}">Delete</a>
+                | <a href="{{ path('album_artist_edit', {'id': albumArtist.id}) }}">Edit</a>
+                | <a href="{{ path('album_artist_remove', {'id': albumArtist.id}) }}">Delete</a>
             </li>
         {% else %}
             <li>Not found artist</li>
         {% endfor %}
     </ul>
 
-    <a href="{{ path('new_album_artist', {'album_id': album.id }) }}">Add artist to album</a>
+    <a href="{{ path('album_artist_new', {'id': album.id }) }}">Add artist to album</a>
 {% endblock %}

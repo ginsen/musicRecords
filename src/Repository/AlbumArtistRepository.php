@@ -27,10 +27,10 @@ class AlbumArtistRepository extends ServiceEntityRepository implements IAlbumArt
     public function findAlbumArtist(int $id): ?IAlbumArtist
     {
         $dql = 'SELECT aa
-                FROM AppBundle:AlbumArtist aa
-                JOIN AppBundle:Album al WITH al.id = aa.album
-                JOIN AppBundle:Artist ar WITH ar.id = aa.artist
-                JOIN AppBundle:Role ro WITH ro.id = aa.role
+                FROM App:AlbumArtist aa
+                JOIN App:Album al WITH al.id = aa.album
+                JOIN App:Artist ar WITH ar.id = aa.artist
+                JOIN App:Role ro WITH ro.id = aa.role
                 WHERE aa.id = :id';
 
         $query = $this->getEntityManager()->createQuery($dql);

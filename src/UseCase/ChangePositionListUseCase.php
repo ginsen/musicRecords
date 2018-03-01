@@ -17,45 +17,38 @@ use App\Service\IPersistLayer;
  */
 class ChangePositionListUseCase
 {
-    /** @var IAlbumArtist */
-    protected $albumArtist;
-
     /** @var IPersistLayer */
     protected $persistLayer;
-
-    /** @var string */
-    protected $action;
 
 
     /**
      * ChangePositionListUseCase constructor.
      *
-     * @param IAlbumArtist  $albumArtist
      * @param IPersistLayer $persistLayer
-     * @param string        $action
      */
-    public function __construct(IAlbumArtist $albumArtist, IPersistLayer $persistLayer, string $action)
+    public function __construct(IPersistLayer $persistLayer)
     {
-        $this->albumArtist  = $albumArtist;
         $this->persistLayer = $persistLayer;
-        $this->action       = $action;
     }
 
 
     /**
+     * @param IAlbumArtist $albumArtist
+     * @param string       $action
+     *
      * @return IAlbumArtist
      */
-    public function execute(): IAlbumArtist
+    public function execute(IAlbumArtist $albumArtist, string $action): IAlbumArtist
     {
-        $position = $this->albumArtist->getPosition();
-        $newPosition = $this->getNewPosition($position);
+        $position    = $albumArtist->getPosition();
+        $newPosition = $this->getNewPosition($action, $position);
 
         if ($newPosition !== $position) {
-            $this->albumArtist->setPosition($newPosition);
-            $this->persistLayer->save($this->albumArtist);
+            $albumArtist->setPosition($newPosition);
+            $this->persistLayer->save($albumArtist);
         }
 
-        return $this->albumArtist;
+        return $albumArtist;
     }
 
 
@@ -63,9 +56,16 @@ class ChangePositionListUseCase
      * @param int $position
      * @return int
      */
-    protected function getNewPosition(int $position): int
+
+    /**
+     * @param string $action
+     * @param int    $position
+     *
+     * @return int
+     */
+    protected function getNewPosition(string $action, int $position): int
     {
-        switch ($this->action) {
+        switch ($action) {
             case 'top':
                 $position = 0;
                 break;

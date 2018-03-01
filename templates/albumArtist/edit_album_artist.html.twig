@@ -3,7 +3,7 @@
 {% block title %}Edit Album Artist{% endblock %}
 
 {% block body %}
-    <a href="{{ path('show_album', {'id': album.id }) }}">Back to album</a>
+    <a href="{{ path('album_show', {'id': album.id }) }}">Back to album</a>
     <h1>Album {{ album.title }} create at {{ album.createdAt.format('d/m/Y') }}</h1>
 
     {{ form_start(form) }}
