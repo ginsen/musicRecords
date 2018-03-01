@@ -1,5 +1,5 @@
 # musicRecords
-Proof web with approach DDD
+Proof web with symfony 4
 
 ## Install
     cd /var/www/
