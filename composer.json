@@ -20,7 +20,9 @@
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
+        "mockery/mockery": "^1.0",
         "symfony/dotenv": "^4.0",
+        "symfony/phpunit-bridge": "^4.0",
         "symfony/profiler-pack": "^1.0",
         "symfony/var-dumper": "^4.0",
         "symfony/web-server-bundle": "^4.0"
