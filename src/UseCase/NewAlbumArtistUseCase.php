@@ -18,7 +18,7 @@ use App\Repository\IRoleRepository;
  * Class NewAlbumArtist
  * @package App\UseCase
  */
-class NewAlbumArtist
+class NewAlbumArtistUseCase
 {
     /** @var IArtistRepository */
     protected $artistRepo;

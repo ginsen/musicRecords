@@ -12,7 +12,7 @@ use App\Entity\Album;
 use App\Entity\AlbumArtist;
 use App\Form\AlbumArtistType;
 use App\UseCase\ChangePositionListUseCase;
-use App\UseCase\NewAlbumArtist;
+use App\UseCase\NewAlbumArtistUseCase;
 use App\UseCase\RemoveEntityUseCase;
 use App\UseCase\SaveEntityUseCase;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -95,7 +95,7 @@ class AlbumArtistController extends Controller
         $artistRepo = $this->get('App\Repository\ArtistRepository');
         $roleRepo   = $this->get('App\Repository\RoleRepository');
 
-        $albumArtist = (new NewAlbumArtist($artistRepo, $roleRepo))->execute($album);
+        $albumArtist = (new NewAlbumArtistUseCase($artistRepo, $roleRepo))->execute($album);
 
         $form = $this->createForm(AlbumArtistType::class, $albumArtist);
 

@@ -19,44 +19,24 @@ class HomeUseCaseTest extends TestCase
     /**
      * @test
      */
-    public function itCallFindAllRepositoriesAlbumAndArtist()
+    public function itCallOnceFindAllInAlbumRepositoryAndArtistRepository(): void
     {
-        $albumRepo =  $this->getSpyAlbumRepo();
-        $artistRepo = $this->getSpyArtistRepo();
+        $albumRepo =  m::spy(IAlbumRepository::class);
+        $artistRepo = m::spy(IArtistRepository::class);
 
-        $useCase = new HomeUseCase($albumRepo, $artistRepo);
-        $useCase->execute();
+        (new HomeUseCase($albumRepo, $artistRepo))
+            ->execute();
 
-        $once = $albumRepo->verify();
-        $this->assertTrue($once);
-        //$this->assertTrue($artistRepo->shouldHaveReceived('findAll')->once());
-    }
+        try {
+            $albumRepo->shouldHaveReceived('findAll')
+                ->times(1);
 
+            $albumRepo->shouldHaveReceived('findAll')
+                ->times(1);
 
-    /**
-     * @return IAlbumRepository|\Mockery\VerificationDirector
-     */
-    protected function getSpyAlbumRepo(): IAlbumRepository
-    {
-        $albumRepo = m::spy(IAlbumRepository::class);
-        $albumRepo->shouldHaveReceived('findAll')
-                  ->once()
-                  ->andReturn(null);
-
-        return $albumRepo;
-    }
-
-
-    /**
-     * @return IArtistRepository|\Mockery\VerificationDirector
-     */
-    protected function getSpyArtistRepo(): IArtistRepository
-    {
-        $albumRepo = m::mock(IArtistRepository::class);
-        $albumRepo->shouldReceive('findAll')
-                  ->once()
-                  ->andReturn(null);
-
-        return $albumRepo;
+            $this->assertTrue(true);
+        } catch (\Exception $exception) {
+            $this->assertTrue(false, $exception->getMessage());
+        }
     }
 }

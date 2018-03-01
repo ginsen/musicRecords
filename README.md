@@ -44,3 +44,4 @@ Open your browser and navigate to `http://localhost:8000/`
 
 Launch in your terminal this command:
 
+    bin/phpunit

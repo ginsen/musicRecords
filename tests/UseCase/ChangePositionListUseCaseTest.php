@@ -10,7 +10,7 @@ namespace App\Tests\UseCase;
 
 use App\Entity\AlbumArtist;
 use App\Entity\IAlbumArtist;
-use App\Service\FakePersistLayer;
+use App\Service\FakeSpyPersistLayer;
 use App\UseCase\ChangePositionListUseCase;
 use PHPUnit\Framework\TestCase;
 
@@ -23,18 +23,26 @@ class ChangePositionListUseCaseTest extends TestCase
     /**
      * @test
      * @dataProvider dataProviderPositions
+     *
      * @param string $action
-     * @param int $oldPosition
-     * @param int $newPosition
+     * @param int    $oldPosition
+     * @param int    $newPosition
+     * @param bool   $persisted
      */
-    public function itChangeAlbumArtistPosition(string $action, int $oldPosition, int $newPosition): void
+    public function itChangeAlbumArtistPosition(
+        string $action,
+        int $oldPosition,
+        int $newPosition,
+        bool $persisted
+    ): void
     {
-        $persistLayer = new FakePersistLayer();
+        $persistLayer = new FakeSpyPersistLayer();
         $albumArtist = $this->getAlbumArtist($oldPosition);
 
         (new ChangePositionListUseCase($persistLayer))->execute($albumArtist, $action);
 
         $this->assertEquals($newPosition, $albumArtist->getPosition());
+        $this->assertEquals($persisted, (bool)$persistLayer->getCountCallsSave());
     }
 
 
@@ -44,11 +52,11 @@ class ChangePositionListUseCaseTest extends TestCase
     public function dataProviderPositions(): array
     {
         return [
-            ['up', 3, 2],
-            ['up', 0, 0],
-            ['down', 0, 1],
-            ['top', 3, 0],
-            ['bottom', 2, -1]
+            ['up', 3, 2, true],
+            ['up', 0, 0, false],
+            ['down', 0, 1, true],
+            ['top', 3, 0, true],
+            ['bottom', 2, -1, true]
         ];
     }
 
