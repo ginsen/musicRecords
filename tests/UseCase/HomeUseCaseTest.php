@@ -14,6 +14,10 @@ use App\UseCase\HomeUseCase;
 use PHPUnit\Framework\TestCase;
 use \Mockery as m;
 
+/**
+ * Class HomeUseCaseTest
+ * @package App\Tests\UseCase
+ */
 class HomeUseCaseTest extends TestCase
 {
     /**

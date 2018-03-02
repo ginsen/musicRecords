@@ -48,6 +48,5 @@ class NewAlbumArtistUseCaseTest extends TestCase
         } catch (m\Exception\InvalidCountException $exception) {
             $this->assertTrue(false, $exception->getMessage());
         }
-
     }
 }
