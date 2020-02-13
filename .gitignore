@@ -1,4 +1,3 @@
-
 ###> IDE/(SublimeText, Eclipse, Zend Studio, Netbeans, PHPStorm, TextMate2) ###
 /.idea/
 Capfile
@@ -16,12 +15,10 @@ TextMate2
 /public/bundles/
 /var/
 /vendor/
+/bin/
+!/bin/console
+!/bin/phpunit
 ###< symfony/framework-bundle ###
-
-###> symfony/web-server-bundle ###
-.web-server-pid
-###< symfony/web-server-bundle ###
-
 ###> symfony/phpunit-bridge ###
 .phpunit
 /phpunit.xml
